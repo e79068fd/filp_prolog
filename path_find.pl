@@ -19,15 +19,15 @@ graph( [c, 2], [b, 2], 2).
 graph( [b, 2], [d, 2], 2).
 
 main :- BusStations = [ [a, 1], [b, 1], [b, 2], [c, 1], [c, 2], [d, 2] ],
-    make_start_value(BusStations, RawCosts, RawPath),
+    make_start_value(BusStations, RawCosts),
     set_start_stations(a, RawCosts, Costs),
-    path_find(BusStations, Costs, RawPath, Path), write(Path).
+    path_find(BusStations, Costs).
 
 test :- clause(graph( [a, 1], [b, 1], 1), true).
 
-make_start_value([], [], []).
-make_start_value([ V | BusStations ], [ [V, 1000000000] | Costs ], [ [ V, V ] | Path ]) :-
-    make_start_value(BusStations, Costs, Path).
+make_start_value([], []).
+make_start_value([ V | BusStations ], [ [V, 1000000000] | Costs ]) :-
+    make_start_value(BusStations, Costs).
 
 set_start_stations(_, [], []).
 set_start_stations(Start, [ [ [Start, Number], _ ] | RawCosts ], [ [ [Start, Number], 0 ] | Costs ]) :-
@@ -36,14 +36,14 @@ set_start_stations(Start, [ Old | RawCosts], [ Old | Costs ]) :-
     set_start_stations(Start, RawCosts, Costs).
 
 %dijkstra
-path_find([], _, Path, Path).
-path_find(BusStations, Costs, Path, GetPath) :-
+path_find([], _).
+path_find(BusStations, Costs) :-
     find_current_min_cost(BusStations, Costs, 1000000000, MinCost),
     get_current(BusStations, Costs, MinCost, V, NewBusStations),
     findall([U, W], graph(V, U, W), RawNext),
     filtred_used_next(NewBusStations, RawNext, Next),
-    update(Costs, Path, V, MinCost, Next, NewCosts, NewPath),
-    path_find(NewBusStations, NewCosts, NewPath, GetPath),
+    update(Costs, V, MinCost, Next, NewCosts),
+    path_find(NewBusStations, NewCosts),
     make_path(V, MinCost, Next).
 
 find_current_min_cost(_, [], Result, Result).
@@ -72,15 +72,14 @@ filtred_used_next(BusStations, [ [U, W] | RawNext ], [ [U, W] | Next ]) :-
 filtred_used_next(BusStations, [ _ | RawNext ], Next) :-
     filtred_used_next(BusStations, RawNext, Next).
 
-%update( _,  _, _, _, [],  _,  _) :- !, fail.
-update([], [], _, _,  _, [], []).
-update([ [U, OldCost] | Costs ], [ _ | Path], V, CurCost, Next, [ [U, NewCost] | NewCosts ], [ [U, V] | NewPath ]) :-
+update([], _, _,  _, []).
+update([ [U, OldCost] | Costs ], V, CurCost, Next, [ [U, NewCost] | NewCosts ]) :-
     get_next(U, Next, W),
     NewCost is CurCost + W,
     OldCost > NewCost,
-    update(Costs, Path, V, CurCost, Next, NewCosts, NewPath), !.
-update([ OldCost | Costs ], [ OldPath | Path ], V, CurCost, Next, [ OldCost | NewCosts ], [ OldPath | NewPath ]) :-
-    update(Costs, Path, V, CurCost, Next, NewCosts, NewPath).
+    update(Costs, V, CurCost, Next, NewCosts), !.
+update([ OldCost | Costs ], V, CurCost, Next, [ OldCost | NewCosts ]) :-
+    update(Costs, V, CurCost, Next, NewCosts).
 
 get_next(_, [], _) :- !, fail.
 get_next(U, [ [U, W] | _ ], W).
