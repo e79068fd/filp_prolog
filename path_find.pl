@@ -1,45 +1,29 @@
-:- dynamic(graph/3).
+:- include('bd.pl').
 
-graph([a, 1], [b, 1], [1, 1]).
-graph([b, 1], [c, 1], [1, 1]).
-graph([a, 1], [c, 1], [1, 1]).
-graph([b, 1], [a, 1], [1, 1]).
-graph([c, 1], [a, 1], [1, 1]).
-graph([c, 1], [b, 1], [1, 1]).
-graph([b, 1], [b, 2], [0, 1]).
-graph([b, 2], [b, 1], [0, 1]).
-graph([c, 1], [c, 2], [0, 1]).
-graph([c, 2], [c, 1], [0, 1]).
-graph([d, 2], [b, 2], [1, 1]).
-graph([b, 2], [c, 2], [1, 1]).
-graph([d, 2], [c, 2], [1, 1]).
-graph([c, 2], [d, 2], [1, 1]).
-graph([c, 2], [b, 2], [1, 1]).
-graph([b, 2], [d, 2], [1, 1]).
+:- include('make_graph.pl').
 
 
-main :- BusStations = [ [a, 1], [b, 1], [b, 2], [c, 1], [c, 2], [d, 2] ],
+main :-
+    make_graph(BusStations),
     Start = a,
     End = d,
-    Weights = [0.5, 0.5],
+    Weights = [0.5, 0.5, 0.5, 0.5],
     findall([V, U, OriginCost], graph(V, U, OriginCost), Relations),
-    normalize(Relations, Weights),
+    preparation_graph(Relations, Weights),
     make_start_value(BusStations, RawCosts),
     set_start_stations(Start, RawCosts, Costs),
     path_find(BusStations, Costs),
-    retractall(normalized_graph(_,_,_)).
+    retractall(prepared_graph(_,_,_)).
 
-test :- clause(graph( [a, 1], [b, 1], 1), true).
+preparation_graph([], _).
+preparation_graph([ [V, U, OriginCost] | Relations], Weights) :-
+    scalarize_weights(OriginCost, Weights, NormalazedCost),
+    assertz(prepared_graph(V, U, NormalazedCost)),
+    preparation_graph(Relations, Weights).
 
-normalize([], _).
-normalize([ [V, U, OriginCost] | Relations], Weights) :-
-    calc_cost(OriginCost, Weights, NormalazedCost),
-    assertz(normalized_graph(V, U, NormalazedCost)),
-    normalize(Relations, Weights).
-
-calc_cost([], [], 0).
-calc_cost([C | OriginCost], [W | Weights], Result) :-
-    calc_cost(OriginCost, Weights, GetResult),
+scalarize_weights([], [], 0).
+scalarize_weights([C | OriginCost], [W | Weights], Result) :-
+    scalarize_weights(OriginCost, Weights, GetResult),
     Result is GetResult + C * W.
 
 make_start_value([], []).
@@ -57,7 +41,7 @@ path_find([], _).
 path_find(BusStations, Costs) :-
     find_current_min_cost(BusStations, Costs, 1000000000, MinCost),
     get_current(BusStations, Costs, MinCost, V, NewBusStations),
-    findall([U, W], normalized_graph(V, U, W), RawNext),
+    findall([U, W], prepared_graph(V, U, W), RawNext),
     filtred_used_next(NewBusStations, RawNext, Next),
     update(Costs, V, MinCost, Next, NewCosts),
     path_find(NewBusStations, NewCosts),
