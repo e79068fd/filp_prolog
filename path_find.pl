@@ -8,11 +8,15 @@ main :-
     Start = a,
     End = d,
     Weights = [0.5, 0.5, 0.5, 0.5],
+    find_path(BusStations, Start, Weights).
+
+
+find_path(BusStations, Start, Weights) :-
     findall([V, U, OriginCost], graph(V, U, OriginCost), Relations),
     preparation_graph(Relations, Weights),
     make_start_value(BusStations, RawCosts),
     set_start_stations(Start, RawCosts, Costs),
-    path_find(BusStations, Costs),
+    dijkstra(BusStations, Costs),
     retractall(prepared_graph(_,_,_)).
 
 preparation_graph([], _).
@@ -36,15 +40,14 @@ set_start_stations(Start, [ [ [Start, Number], _ ] | RawCosts ], [ [ [Start, Num
 set_start_stations(Start, [ Old | RawCosts], [ Old | Costs ]) :-
     set_start_stations(Start, RawCosts, Costs).
 
-%dijkstra
-path_find([], _).
-path_find(BusStations, Costs) :-
+dijkstra([], _).
+dijkstra(BusStations, Costs) :-
     find_current_min_cost(BusStations, Costs, 1000000000, MinCost),
     get_current(BusStations, Costs, MinCost, V, NewBusStations),
     findall([U, W], prepared_graph(V, U, W), RawNext),
     filtred_used_next(NewBusStations, RawNext, Next),
     update(Costs, V, MinCost, Next, NewCosts),
-    path_find(NewBusStations, NewCosts),
+    dijkstra(NewBusStations, NewCosts),
     make_path(V, MinCost, Next).
 
 find_current_min_cost(_, [], Result, Result).
