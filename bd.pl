@@ -1,14 +1,13 @@
-%bus(bus_number, from, to, [distance, time, price]). % distance- км, time - минуты, from,to - station_number, price - рубли
-bus(1, a, b, [10, 25, 18]).
-bus(1, b, c, [10, 25, 18]).
-bus(1, a, c, [10, 25, 18]).
-bus(1, b, a, [10, 25, 18]).
-bus(1, c, b, [10, 25, 18]).
-bus(1, c, a, [10, 25, 18]).
+%bus(bus_number, [first, second, ..., end]). first, second, ..., end - остановки
+bus(1, [a, b, c, b, a]).
+bus(2, [d, b, c, b, d]).
 
-bus(2, d, b, [10, 15, 20]).
-bus(2, b, c, [10, 15, 20]).
-bus(2, d, c, [10, 15, 20]).
-bus(2, c, d, [10, 15, 20]).
-bus(2, c, b, [10, 15, 20]).
-bus(2, b, d, [10, 15, 20]).
+%station(from, to, [distance, time]) % distance - километры, time - минуты
+station(a, b, [10, 35]).
+station(b, a, [10, 35]).
+station(b, c, [10, 25]).
+station(c, b, [10, 25]).
+station(d, c, [10, 15]).
+station(c, d, [10, 15]).
+station(d, b, [10, 15]).
+station(b, d, [10, 15]).

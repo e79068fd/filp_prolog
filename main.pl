@@ -6,7 +6,8 @@
 
 main :-
     make_graph(BusStations),
+    write(BusStations),
     Start = a,
     End = d,
-    Weights = [0.5, 0.5, 0.5, 0.5],
+    Weights = [0.5, 0.5, 0.5],
     find_path(BusStations, Start, Weights).
