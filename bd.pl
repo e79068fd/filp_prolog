@@ -7,6 +7,8 @@ station(a, b, [10, 35]).
 station(b, a, [10, 35]).
 station(b, c, [10, 25]).
 station(c, b, [10, 25]).
+station(a, c, [10, 45]).
+station(c, a, [10, 45]).
 station(d, c, [10, 15]).
 station(c, d, [10, 15]).
 station(d, b, [10, 15]).
