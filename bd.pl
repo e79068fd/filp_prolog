@@ -1,6 +1,8 @@
 %bus(bus_number, [first, second, ..., end]). first, second, ..., end - остановки
 bus(1, [a, b, c, b, a]).
 bus(2, [d, b, c, b, d]).
+bus(3, [a, c, b, c, a]).
+bus(4, [d, c, b, c, d]).
 
 %station(from, to, [distance, time]) % distance - километры, time - минуты
 station(a, b, [10, 35]).
