@@ -24,6 +24,3 @@ ma_mix(Current, Answer, [ [Number, GetStart, CurrentStation, [AnsDist, AnsTime]]
 ma_mix(Current, Answer, [ [Number, Station, Station, [0, 0]], Answer ]) :-
     Current = [Station, Number],
     Answer = [_, _, Station, _].
-
-
-

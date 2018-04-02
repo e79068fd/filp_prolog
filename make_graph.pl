@@ -1,5 +1,3 @@
-%:- include('bd.pl').
-
 make_graph(BusStations) :-
     findall(Weights, station(_,_,Weights), WeightsList),
     mg_find_max_weights(WeightsList, MaxWeights),
