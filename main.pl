@@ -9,22 +9,24 @@ main :-
     make_graph(BusStations),
 
     show_stations([]),
-    format("Set start station:~n",[]),
+    format("Выбрать стартовую остановку:~n",[]),
     get_station(Start, []),
 
     show_stations([Start]),
-    format("Set end station:~n",[]),
+    format("Выбрать конечную остановку:~n",[]),
     get_station(End, [Start]),
 
-    format("Set weights. Format weights is [Dist, Time, Changes] where Dist,Time,Changes is number in range (0..1]. If weights are positive number but are not in range, it will be normalization.~n",[]),
+    format("Установить веса. Формат весов [Растояние, Время, Пересадки], где Растояние, Время, Пересадки это целые положительные числа.~n",[]),
     get_weights(Weights),
 
     find_path(BusStations, Start, Weights),
-    make_answer(Start, End, Result),
-    write(Result).
+    make_answer(Start, End),
+    
+    findall([AllDist, AllTime, Changes, Result], answer(AllDist, AllTime, Changes, Result), Answers),
+    show_answer(Answers), !.
 
 show_stations(Ignore) :-
-    format("Station name:~n", []),
+    format("Список станций:~n", []),
     station_name(ID, Name),
     \+ member(ID, Ignore),
     format("~d ~a~n", [ID, Name]),
@@ -33,14 +35,14 @@ show_stations(Ignore) :-
 try_get(Term, Comparator) :-
     catch(read(Term), _, fail),
     call_with_args(Comparator, Term), ! ;
-    format("Not correct input. Try again!~n", []),
+    format("Некорректный ввод. Повторить ввод!~n", []),
     try_get(Term, Comparator).
 
 get_station(Station, Ignore) :-
     try_get(Station, number),
     \+ member(Station, Ignore),
     station_name(Station, _), ! ;
-    format("Not correct bus station. Try again!~n", []),
+    format("Выбран некорректный номер остановки. Повторить ввод!~n", []),
     get_station(Station, Ignore).
 
 get_weights(Weights) :-
@@ -48,7 +50,7 @@ get_weights(Weights) :-
     length(RawWeights, L), L = 3,
     sum_list(RawWeights, Sum),
     normalization_weights(RawWeights, Sum, Weights), ! ;
-    format("Not correct weights. Try again!~n", []),
+    format("Установленны некорректные веса. Повторить ввод!~n", []),
     get_weights(Weights).
 
 checker_weights([]).
@@ -61,3 +63,17 @@ normalization_weights([], _, []).
 normalization_weights([ RW | RawWeights ], Sum, [ W | Weights ]) :-
     W is RW / Sum,
     normalization_weights(RawWeights, Sum, Weights).
+
+show_answer([]).
+show_answer([ [AllDist, AllTime, Changes, Results] | Answers]) :-
+    show_answer(Answers),
+    length(Results, Changes),
+    format("~nВсе растояние: ~d; Все время: ~d; Количество пересадок: ~d~n", [AllDist, AllTime, Changes]),
+    show_result(Results).
+
+show_result([]).
+show_result([ [Number, Start, End, [Dist, Time]] | Results ]) :-
+    show_result(Results),
+    station_name(Start, StartName),
+    station_name(End, EndName),
+    format("На автобусной остановке ~a сесть на автобус №~d доехать до остановки ~a. Растояние ~d(км) Время ~d(минут)~n", [StartName, Number, EndName, Dist, Time]).

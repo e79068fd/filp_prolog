@@ -1,8 +1,12 @@
-make_answer(Start, End, Result) :-
+make_answer(Start, End) :-
     path(Prev, [End, Number]),
     ma_dfs(Start, Prev, GetAnswer),
     TmpAnswer = [ [End, Number] | GetAnswer ],
-    ma_fold(TmpAnswer, Result).
+    ma_fold(TmpAnswer, Result),
+    ma_sum(Result, AllDist, AllTime),
+    length(Result, Changes),
+    assertz(answer(AllDist, AllTime, Changes, Result)),
+    fail ; true.
 
 ma_dfs(Stop, Current, [ Current ]) :- Current = [Stop, _], !.
 ma_dfs(Stop, Current, [ Current | GetAnswer ]) :-
@@ -24,3 +28,10 @@ ma_mix(Current, Answer, [ [Number, GetStart, CurrentStation, [AnsDist, AnsTime]]
 ma_mix(Current, Answer, [ [Number, Station, Station, [0, 0]], Answer ]) :-
     Current = [Station, Number],
     Answer = [_, _, Station, _].
+
+ma_sum([], 0, 0).
+ma_sum([ [_, _, _, [Dist, Time]] | Results ], AllDist, AllTime) :-
+    ma_sum(Results, GetDist, GetTime),
+    AllDist is GetDist + Dist,
+    AllTime is GetTime + Time.
+
