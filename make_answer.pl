@@ -1,5 +1,7 @@
 make_answer(Start, End) :-
     path(Prev, [End, Number]),
+    Prev = [PrevStation, _],
+    PrevStation \= End,
     ma_dfs(Start, Prev, GetAnswer),
     TmpAnswer = [ [End, Number] | GetAnswer ],
     ma_fold(TmpAnswer, Result),
