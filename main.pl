@@ -7,15 +7,7 @@
 
 main :-
     make_graph(BusStations),
-    write(BusStations),nl,
-    Start = 1,
-    End = 4,
-    Weights = [0.5, 0.5, 0.5],
-    find_path(BusStations, Start, Weights),
-    make_answer(Start, End, Result),
-    write(Result).
 
-test :-
     show_stations([]),
     format("Set start station:~n",[]),
     get_station(Start, []),
@@ -24,7 +16,12 @@ test :-
     format("Set end station:~n",[]),
     get_station(End, [Start]),
 
-    write([Start, End]).
+    format("Set weights. Format weights is [Dist, Time, Changes] where Dist,Time,Changes is number in range (0..1]. If weights are positive number but are not in range, it will be normalization.~n",[]),
+    get_weights(Weights),
+
+    find_path(BusStations, Start, Weights),
+    make_answer(Start, End, Result),
+    write(Result).
 
 show_stations(Ignore) :-
     format("Station name:~n", []),
@@ -45,3 +42,22 @@ get_station(Station, Ignore) :-
     station_name(Station, _), ! ;
     format("Not correct bus station. Try again!~n", []),
     get_station(Station, Ignore).
+
+get_weights(Weights) :-
+    try_get(RawWeights, checker_weights),
+    length(RawWeights, L), L = 3,
+    sum_list(RawWeights, Sum),
+    normalization_weights(RawWeights, Sum, Weights), ! ;
+    format("Not correct weights. Try again!~n", []),
+    get_weights(Weights).
+
+checker_weights([]).
+checker_weights([W | Weights]) :-
+    number(W),
+    W > 0,
+    checker_weights(Weights).
+
+normalization_weights([], _, []).
+normalization_weights([ RW | RawWeights ], Sum, [ W | Weights ]) :-
+    W is RW / Sum,
+    normalization_weights(RawWeights, Sum, Weights).
