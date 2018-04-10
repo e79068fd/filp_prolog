@@ -4,12 +4,12 @@ find_path(BusStations, Start, Weights) :-
     fp_make_start_value(BusStations, RawCosts),
     fp_set_start_stations(Start, RawCosts, Costs),
     fp_dijkstra(BusStations, Costs),
-    retractall(prepared_graph(_,_,_)),
-    retractall(used(_,_)).
+    retractall(prepared_graph(_,_,_)).
 
 fp_preparation_graph([], _).
 fp_preparation_graph([ [V, U, OriginCost] | Relations], Weights) :-
-    fp_scalarize_weights(OriginCost, Weights, NormalazedCost),
+    fp_scalarize_weights(OriginCost, Weights, TmpNormalazedCost),
+    NormalazedCost is round(TmpNormalazedCost * 1000),
     assertz(prepared_graph(V, U, NormalazedCost)),
     fp_preparation_graph(Relations, Weights).
 

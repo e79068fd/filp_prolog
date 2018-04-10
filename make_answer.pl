@@ -1,9 +1,12 @@
 make_answer(Start, End) :-
-    path(Prev, [End, Number]),
+    findall(EndCost, used([End, _], EndCost), EndCosts),
+    min_list(EndCosts, MinCost),
+    used(EndNode, MinCost),
+    path(Prev, EndNode),
     Prev = [PrevStation, _],
     PrevStation \= End,
     ma_dfs(Start, Prev, GetAnswer),
-    TmpAnswer = [ [End, Number] | GetAnswer ],
+    TmpAnswer = [ EndNode | GetAnswer ],
     ma_fold(TmpAnswer, Result),
     ma_sum(Result, AllDist, AllTime),
     length(Result, Changes),
@@ -36,4 +39,3 @@ ma_sum([ [_, _, _, [Dist, Time]] | Results ], AllDist, AllTime) :-
     ma_sum(Results, GetDist, GetTime),
     AllDist is GetDist + Dist,
     AllTime is GetTime + Time.
-

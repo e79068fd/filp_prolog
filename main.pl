@@ -24,8 +24,10 @@ main :-
     
     findall([AllDist, AllTime, Changes, Result], answer(AllDist, AllTime, Changes, Result), Answers),
     show_answer(Answers),
+    retractall(answer(_,_,_,_)),
+    retractall(used(_,_)),
     retractall(path(_,_)),
-    retractall(answer(_,_,_,_)), !.
+    retractall(graph(_,_,_)), !.
 
 show_stations(Ignore) :-
     format("Список станций:~n", []),
