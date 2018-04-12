@@ -1,7 +1,10 @@
+:- dynamic(answer/4).
+
 make_answer(Start, End) :-
     findall(EndCost, used([End, _], EndCost), EndCosts),
     min_list(EndCosts, MinCost),
     used(EndNode, MinCost),
+    EndNode = [End, _],
     path(Prev, EndNode),
     Prev = [PrevStation, _],
     PrevStation \= End,
