@@ -9,7 +9,8 @@ make_answer(Start, End) :-
     TmpAnswer = [ EndNode | GetAnswer ],
     ma_fold(TmpAnswer, Result),
     ma_sum(Result, AllDist, AllTime),
-    length(Result, Changes),
+    length(Result, TmpChanges),
+    Changes is TmpChanges - 1,
     assertz(answer(AllDist, AllTime, Changes, Result)),
     fail ; true.
 

@@ -21,7 +21,6 @@ main :-
 
     find_path(BusStations, Start, Weights),
     make_answer(Start, End),
-    
     findall([AllDist, AllTime, Changes, Result], answer(AllDist, AllTime, Changes, Result), Answers),
     show_answer(Answers),
     retractall(answer(_,_,_,_)),
@@ -71,8 +70,7 @@ normalization_weights([ RW | RawWeights ], Sum, [ W | Weights ]) :-
 show_answer([]).
 show_answer([ [AllDist, AllTime, Changes, Results] | Answers]) :-
     show_answer(Answers),
-    length(Results, Changes),
-    format("~nВсе растояние: ~d; Все время: ~d; Количество пересадок: ~d~n", [AllDist, AllTime, Changes]),
+    format("~nВсе растояние: ~2f; Все время: ~2f; Количество пересадок: ~d~n", [AllDist, AllTime, Changes]),
     show_result(Results).
 
 show_result([]).
@@ -80,4 +78,4 @@ show_result([ [Number, Start, End, [Dist, Time]] | Results ]) :-
     show_result(Results),
     station_name(Start, StartName),
     station_name(End, EndName),
-    format("На автобусной остановке ~a сесть на автобус №~d доехать до остановки ~a. Растояние ~d(км) Время ~d(минут)~n", [StartName, Number, EndName, Dist, Time]).
+    format("На автобусной остановке ~a сесть на автобус №~d доехать до остановки ~a. Растояние ~2f(км) Время ~2f(минут)~n", [StartName, Number, EndName, Dist, Time]).
