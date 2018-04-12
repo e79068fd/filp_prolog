@@ -17,12 +17,11 @@ mg_find_max_weights([ [Dist, Time] | WeightsList], [MaxDist, MaxTime]) :-
 mg_make_first_wave_graph_node([], _, []) :- !.
 mg_make_first_wave_graph_node([ [Number, Chain] | BusList], MaxWeights, BusStations) :-
     mg_make_first_wave_graph_node(BusList, MaxWeights, GetOtherBusStations),
-    mg_make_first_node(Number, Chain, MaxWeights, GetCurrentBusStations),
-    append(GetCurrentBusStations, GetOtherBusStations, BusStations).
+    mg_make_first_node(Number, Chain, MaxWeights, GetOtherBusStations, BusStations).
 
-mg_make_first_node(_, [_], _, []) :- !.
-mg_make_first_node(Number, [From, To | Chain], MaxWeights, BusStations) :-
-    mg_make_first_node(Number, [To | Chain], MaxWeights, GetBusStations),
+mg_make_first_node(_, [_], _, OtherBusStations, OtherBusStations) :- !.
+mg_make_first_node(Number, [From, To | Chain], MaxWeights, OtherBusStations, BusStations) :-
+    mg_make_first_node(Number, [To | Chain], MaxWeights, OtherBusStations, GetBusStations),
     V = [From, Number],
     U = [To, Number],
     station(From, To, Weights),
