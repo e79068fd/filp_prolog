@@ -126,29 +126,29 @@ station(26, 19, [0.4, ?]).
 station(26, 18, [1.7, ?]).
 station(26, 8, [0.5, ?]).
 
-station_name(1, cum).
-station_name(2, pl_lenina).
-station_name(3, tuz).
-station_name(4, glavpochtampt).
-station_name(5, pl_novosovornaya).
-station_name(6, tgu).
-station_name(7, biblioteka_tgu).
-station_name(8, temz).
-station_name(9, tpu).
-station_name(10, zc_octyabr).
-station_name(11, kraevedcheski_musei).
-station_name(12, gogol).
-station_name(13, krasnoarmeiskaya).
-station_name(14, ost_1905_goda).
-station_name(15, rechnoi_voksal).
-station_name(16, tgasu).
-station_name(17, belinskogo).
-station_name(18, transpotnoe_kolco).
-station_name(19, lagernij_sad).
-station_name(20, tomsk1).
-station_name(21, pl_kirova).
-station_name(22, pr_komsomolsij).
-station_name(23, sibirskya_komsomolsij).
-station_name(24, sibirskya_krasnoarmeiskaya).
-station_name(25, dom_radio).
-station_name(26, uchebaya).
+station_name(1, 'ЦУМ').
+station_name(2, 'Площадь Ленина').
+station_name(3, 'ТЮЗ').
+station_name(4, 'Главпочтамт').
+station_name(5, 'пл. Ново-Соборная').
+station_name(6, 'ТГУ').
+station_name(7, 'Библиотека ТГУ').
+station_name(8, 'ТЭМЗ').
+station_name(9, 'ТПУ').
+station_name(10, 'ЗЦ Октябрь').
+station_name(11, 'Краеведческий музей').
+station_name(12, 'Гоголя').
+station_name(13, 'Красноармейская').
+station_name(14, '1905 года').
+station_name(15, 'Речной вокзал').
+station_name(16, 'ТГАСУ').
+station_name(17, 'Белинского').
+station_name(18, 'Транспортное кольцо').
+station_name(19, 'Лагерный Сад').
+station_name(20, 'Томск-1').
+station_name(21, 'пл. Кирова').
+station_name(22, 'пр. Комсомольский').
+station_name(23, 'Сибирская (Комсомольский проспект)').
+station_name(24, 'Сибирская (ул. Красноармейская)').
+station_name(25, 'Дом Радио').
+station_name(26, 'Учебная').

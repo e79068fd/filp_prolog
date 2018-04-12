@@ -70,7 +70,7 @@ normalization_weights([ RW | RawWeights ], Sum, [ W | Weights ]) :-
 show_answer([]).
 show_answer([ [AllDist, AllTime, Changes, Results] | Answers]) :-
     show_answer(Answers),
-    format("~nВсе растояние: ~2f; Все время: ~2f; Количество пересадок: ~d~n", [AllDist, AllTime, Changes]),
+    format("~nВсе растояние: ~2f(км); Все время: ~2f(минут); Количество пересадок: ~d~n", [AllDist, AllTime, Changes]),
     show_result(Results).
 
 show_result([]).
