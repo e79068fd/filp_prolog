@@ -35,11 +35,11 @@ show_stations(Ignore) :-
     format("~d ~a~n", [ID, Name]),
     fail;true.
 
-try_get(Term, Comparator) :-
+try_get(Term, Validator) :-
     catch(read(Term), _, fail),
-    call_with_args(Comparator, Term), ! ;
+    call_with_args(Validator, Term), ! ;
     format("Некорректный ввод. Повторить ввод!~n", []),
-    try_get(Term, Comparator).
+    try_get(Term, Validator).
 
 get_station(Station, Ignore) :-
     try_get(Station, number),

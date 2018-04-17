@@ -8,8 +8,7 @@ find_path(BusStations, Start, Weights) :-
 
 fp_preparation_graph([], _).
 fp_preparation_graph([ [V, U, OriginCost] | Relations], Weights) :-
-    fp_scalarize_weights(OriginCost, Weights, TmpNormalazedCost),
-    NormalazedCost is round(TmpNormalazedCost * 1000),
+    fp_scalarize_weights(OriginCost, Weights, NormalazedCost),
     assertz(prepared_graph(V, U, NormalazedCost)),
     fp_preparation_graph(Relations, Weights).
 
